@@ -9,13 +9,13 @@ class fsm():
 
     states = ['idle', 'run_state', 'config_state']
     transitions = [
-        { 'trigger': 'start_running',
+        { 'trigger': 'trigger_run',
           'source': ['idle','config_state'], 'dest': 'run_state',
           'before': 'setup_run_state'},
-        { 'trigger': 'starting_configuring',
+        { 'trigger': 'trigger_configure',
           'source': 'idle', 'dest': 'config_state',
           'before': 'setup_config_state'},
-        { 'trigger': 'starting_configuring',
+        { 'trigger': 'trigger_configure',
           'source': 'run_state', 'dest': 'config_state',
           'before': 'quit_run_state'}
     ]
