@@ -13,8 +13,11 @@ class fsm():
           'source': ['idle','config_state'], 'dest': 'run_state',
           'before': 'setup_run_state'},
         { 'trigger': 'starting_configuring',
-          'source': ['idle','run_state'], 'dest': 'config_state',
-          'before': 'setup_config_state'}
+          'source': 'idle', 'dest': 'config_state',
+          'before': 'setup_config_state'},
+        { 'trigger': 'starting_configuring',
+          'source': 'run_state', 'dest': 'config_state',
+          'before': 'quit_run_state'}
     ]
 
     def __init__(self):
@@ -35,3 +38,4 @@ class fsm():
         self.r.loop(0)
 
     def quit_run_state(self):
+        self.r.stop_running()

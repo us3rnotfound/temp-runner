@@ -10,6 +10,7 @@ class Runner():
         self.units = units
         self.therm = Read_temps()
         self.v = Video_output()
+        self.quit = False
 
     def _get_temps(self):
         t_c_list, t_f_list = self.therm.read_temp()
@@ -17,19 +18,19 @@ class Runner():
             return t_f_list
         else:
             return t_c_list
-        
-    def output_temps(self):
-        self.v.update_temps(self._get_temps()):
 
     def loop(self, times_to_run=0):
         t = 0
         while True:
             t+= 1
-            self.r.output_temps()
-            if t == times_to_run:
+            self.v.update_temps(self._get_temps())
+            if t == times_to_run or self.quit:
                 break
         return
 
+    def stop_running(self):
+        self.quit = True
+
 if __name__ == "__main__":
-    r = Runner(F)
+    r = Runner(units=F)
     r.loop(0)
