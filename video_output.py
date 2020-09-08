@@ -13,7 +13,6 @@ class Video_output():
     def _clear_img(self):
         img = cv2.imread(self.img_file)
         self.img_pil = Image.fromarray(img)
-
         self.draw = ImageDraw.Draw(self.img_pil)
 
     def _write_temps(self, temps):
@@ -28,11 +27,12 @@ class Video_output():
         self._write_temps(temps)
 
         img_np = np.array(self.img_pil)
-        cv2.namedWindow("img", cv2.WND_PROP_FULLSCREEN)          
+        img_np_fullscreen = img_np.resize(1600,900)
+        cv2.namedWindow("img", cv2.WINDOW_AUTOSIZE | cv2.WINDOW_FREERATIO | cv2.WINDOW_GUI_NORMAL)          
         cv2.setWindowProperty("img", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        cv2.imshow("img", img_np)
+        cv2.imshow("img", img_np_fullscreen)
 
         cv2.waitKey(500)
 
     def destroy_video(self):
-        cv2.destroyAllWindows() 
+        cv2.destroyAllWindows()
