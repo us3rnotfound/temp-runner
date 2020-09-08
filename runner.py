@@ -21,16 +21,17 @@ class Runner():
 
     def loop(self, times_to_run=0):
         t = 0
-        while True:
+        while self.quit == False:
             t+= 1
             self.v.update_temps(self._get_temps())
-            if t == times_to_run or self.quit:
+            if t == times_to_run:
+                self.v.destroy_video()
                 break
-        return
 
     def stop_running(self):
         self.quit = True
+        
 
 if __name__ == "__main__":
     r = Runner(units=F)
-    r.loop(0)
+    r.loop(5)
