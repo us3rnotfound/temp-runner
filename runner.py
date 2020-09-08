@@ -31,6 +31,7 @@ class Runner():
         self.v.destroy_video()
 
     def stop_running(self):
+        print ('trying to quit (runner)')
         self.quit = True
         
 

@@ -5,6 +5,7 @@ from threading import Thread
 import time
 import termios, sys , tty
 
+
 # UNITS:
 F = 0
 C = 1
@@ -14,23 +15,27 @@ class Temp_runner():
     def __init__(self):
         self.fsm = fsm()
 
-        config_pin = Button(21)
-        config_pin.hold_time = 2 # seconds
+        self.config_pin = Button(21, pull_up=True, bounce_time=4, hold_time=1)
 
-        config_pin.when_held = self.to_config_state
-        config_pin.when_released = self.to_run_state
+        self.config_pin.when_held = self.to_config_state
+        self.config_pin.when_released = self.to_run_state
 
-        if config_pin.value:
+    def run(self):
+        if self.config_pin.is_held:
             self.to_config_state()
         else:
             self.to_run_state()
 
+        pause()
+
     def to_run_state(self):
+        print('to run state')
         thread = Thread(target=self.fsm.to_run_state)
         thread.start()
         time.sleep(0.01) # thread requires some time to start
 
     def to_config_state(self):
+        print('to config state')
         thread = Thread(target=self.fsm.to_config_state)
         thread.start()
         time.sleep(0.01) # thread requires some time to start
@@ -61,5 +66,4 @@ class Temp_runner():
 
 
 t = Temp_runner()
-
-pause()
+t.run()

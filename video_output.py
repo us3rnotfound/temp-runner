@@ -45,4 +45,5 @@ class Video_output():
         cv2.waitKey(500)
 
     def destroy_video(self):
+        print('DESTROY VIDEO')
         cv2.destroyAllWindows()

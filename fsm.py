@@ -1,4 +1,5 @@
-from transitions.extensions import LockedMachine as Machine
+#from transitions.extensions import LockedMachine as Machine
+from transitions import Machine
 from runner import Runner
 
 # UNITS:
