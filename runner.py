@@ -25,8 +25,10 @@ class Runner():
             t+= 1
             self.v.update_temps(self._get_temps())
             if t == times_to_run:
-                self.v.destroy_video()
                 break
+        
+        # Quit goes True or times to run exceeded:
+        self.v.destroy_video()
 
     def stop_running(self):
         self.quit = True

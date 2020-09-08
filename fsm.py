@@ -1,6 +1,5 @@
-from transitions import Machine
+from transitions.extensions import LockedMachine as Machine
 from runner import Runner
-import threading, time
 
 # UNITS:
 F = 0
@@ -8,17 +7,19 @@ C = 1
 
 class fsm():
 
-    states = ['idle', 'run_state', 'config_state']
+    states = [
+             {'name':'idle'},
+             {'name':'run_state',},
+             {'name':'config_state'}
+             ]
     transitions = [
-        { 'trigger': 'trigger_run',
-          'source': ['idle','config_state'], 'dest': 'run_state'},
-        { 'trigger': 'trigger_configure',
-          'source': 'idle', 'dest': 'config_state',
-          'before': 'setup_config_state'},
-        { 'trigger': 'trigger_configure',
-          'source': 'run_state', 'dest': 'config_state',
-          'after': 'quit_run_state'}
-    ]
+             { 'trigger': 'trigger_run',
+             'source': ['idle','config_state'],
+             'dest': 'run_state'},
+             { 'trigger': 'trigger_config',
+             'source': ['idle','run_state'],
+             'dest': 'config_state'}
+             ]
 
     def __init__(self):
         self.name = 'temp_runner'
@@ -29,29 +30,18 @@ class fsm():
                                transitions=fsm.transitions,
                                initial='idle')
 
-        self.run_thread = threading.Thread(target=self._run_thread)
-        self.config_thread = threading.Thread(target=self._config_thread)
-    
-        self.run_thread.start()
-        self.config_thread.start()
-
         self.r = Runner(F)
 
-    def _run_thread(self):
-        while True:
-            if self.state == 'run_state':                
-                self.r.loop(0)
-            time.sleep(1)
+    def on_enter_run_state(self):
+        print ('setup_run_state')
+        self.r.loop(0)
 
-    def _config_thread(self):
-        while True:
-            if self.state == 'config_state':
-                print ('in config state')
-            time.sleep(1)
-
-    def setup_config_state(self):
-        print ('state setup config state')
-
-    def quit_run_state(self):
-        print ('quit run state')
+    def on_exit_run_state(self):
+        print ('quit_run_state')
         self.r.stop_running()
+
+    def on_enter_config_state(self):
+        print ('setup config state')
+
+    def on_exit_config_state(self):
+        print ('quit config state')
