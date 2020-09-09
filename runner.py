@@ -8,22 +8,27 @@ C = 1
 class Runner():    
     def __init__(self, units=F):
         self.units = units
+        self.max_limit = 80
         self.therm = Read_temps()
         self.v = Video_output()
         self.quit = False
 
     def _get_temps(self):
         t_c_list, t_f_list = self.therm.read_temp()
+        over_limit_list_c = [t > self.max_limit for t in t_c_list]
+        over_limit_list_f = [t > self.max_limit for t in t_f_list]
+
         if self.units == F:
-            return t_f_list
+            return t_f_list, over_limit_list_f
         else:
-            return t_c_list
+            return t_c_list, over_limit_list_c
 
     def loop(self, times_to_run=0):
         t = 0
         while self.quit == False:
             t+= 1
-            self.v.update_temps(self._get_temps())
+            temps_list, over_limit_list = self._get_temps()
+            self.v.update_temps(temps_list, over_limit_list)
             if t == times_to_run:
                 break
         

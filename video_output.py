@@ -2,9 +2,9 @@ import cv2
 from PIL import ImageFont, ImageDraw, Image
 import numpy as np
 import tkinter
-
-b,g,r,a = 0,255,0,0
-
+       #b,g,r,a
+GREEN = 0,255,0,0
+RED   = 0,0,255,0 
 class Video_output():
     
     def __init__(self):
@@ -26,16 +26,17 @@ class Video_output():
         self.img_pil = Image.fromarray(self.background_img)
         self.draw = ImageDraw.Draw(self.img_pil)
 
-    def _write_temps(self, temps):
+    def _write_temps(self, temps, over_limits):
+        fill_rules = {True: RED, False: GREEN}
         n = 1
-        print(temps)
-        for temp in temps:
-            self.draw.text((50, 80+(n*40)),  "Sensor " + str(n) +": {:0.2f}°F".format(temp), font = self.font, fill = (b, g, r, a))
+        print(temps, over_limits)
+        for temp, fill in zip(temps, over_limits):
+            self.draw.text((50, 80+(n*40)),  "Sensor " + str(n) +": {:0.2f}°F".format(temp), font = self.font, fill = fill_rules[fill])
             n += 1
 
-    def update_temps(self, temps):
+    def update_temps(self, temps, over_limits):
         self._clear_img()
-        self._write_temps(temps)
+        self._write_temps(temps, over_limits)
 
         img_np = np.array(self.img_pil)
         #img_np_fullscreen = img_np.resize(1600,900)
