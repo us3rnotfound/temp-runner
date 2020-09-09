@@ -2,11 +2,8 @@
 from video_output import Video_output
 from read_temps_class import Read_temps
 
-F = 0
-C = 1
-
 class Runner():    
-    def __init__(self, units=F, max_limit=80):
+    def __init__(self, units='F', max_limit=80):
         # Parameters
         self.units = units
         self.max_limit = max_limit
@@ -43,5 +40,5 @@ class Runner():
         self.quit = True
         
 if __name__ == "__main__":
-    r = Runner(units=F)
+    r = Runner(units='F')
     r.loop(5)

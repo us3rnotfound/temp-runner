@@ -1,0 +1,7 @@
+max_limit: 84.9
+sensor_1_name: Temperature Sensor 1
+sensor_2_name: Temperature Sensor 2
+sensor_3_name: Temperature Sensor 3
+sensor_4_name: Temperature Sensor 4
+sensor_5_name: Temperature Sensor 5
+units: F

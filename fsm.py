@@ -1,10 +1,6 @@
 from transitions import Machine
 from runner import Runner
 
-# UNITS:
-F = 0
-C = 1
-
 class fsm():
 
     states = [
@@ -30,7 +26,7 @@ class fsm():
                                transitions=fsm.transitions,
                                initial='idle')
 
-        self.r = Runner(F)
+        self.r = Runner('F')
 
     def on_enter_run_state(self):
         print ('setup_run_state')
