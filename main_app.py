@@ -3,8 +3,7 @@ from gpiozero import Button
 from signal import pause
 from threading import Thread
 import time
-import termios, sys , tty
-
+#import termios, sys , tty
 
 # UNITS:
 F = 0
@@ -41,6 +40,7 @@ class Temp_runner():
         thread.start()
         time.sleep(0.01) # thread requires some time to start
 
+    '''
     def key_watch(self):
         while True:
             print ("Enter c or r: ")
@@ -64,7 +64,7 @@ class Temp_runner():
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return ch
-
+    '''
 
 t = Temp_runner()
 t.run()
