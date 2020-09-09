@@ -40,7 +40,7 @@ class Video_output():
 
         img_np = np.array(self.img_pil)
         #img_np_fullscreen = img_np.resize(1600,900)
-        cv2.namedWindow("img", cv2.WINDOW_AUTOSIZE )         
+        cv2.namedWindow("img", cv2.WND_PROP_FULLSCREEN )         
         cv2.setWindowProperty("img", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         cv2.imshow("img", img_np)
 

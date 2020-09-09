@@ -6,13 +6,16 @@ F = 0
 C = 1
 
 class Runner():    
-    def __init__(self, units=F):
+    def __init__(self, units=F, max_limit=80):
+        # Parameters
         self.units = units
-        self.max_limit = 80
-        self.therm = Read_temps()
-        self.v = Video_output()
+        self.max_limit = max_limit
         self.quit = False
 
+        # Module inits
+        self.therm = Read_temps()
+        self.v = Video_output()
+        
     def _get_temps(self):
         t_c_list, t_f_list = self.therm.read_temp()
         over_limit_list_c = [t > self.max_limit for t in t_c_list]
@@ -39,7 +42,6 @@ class Runner():
         print ('trying to quit (runner)')
         self.quit = True
         
-
 if __name__ == "__main__":
     r = Runner(units=F)
     r.loop(5)
