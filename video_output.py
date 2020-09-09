@@ -14,9 +14,10 @@ class Video_output():
         try:
             root = tkinter.Tk()
             w, h = root.winfo_screenwidth(), root.winfo_screenheight()
-            print(w,h)
+            print('RESOLUTION: ' + str(w) + ' x ' + str(h))
             self.background_img = np.zeros((h,w,3), np.uint8)
         except:
+            print('RESOLUTION FAILED, 1024 x 768')
             self.background_img = np.zeros((1024,768,3), np.uint8)
 
     def _clear_img(self):

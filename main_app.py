@@ -15,27 +15,28 @@ class Temp_runner():
     def __init__(self):
         self.fsm = fsm()
 
-        self.config_pin = Button(21, pull_up=True, bounce_time=4, hold_time=1)
+        self.config_pin = Button(21, pull_up=True, bounce_time=1)
 
-        self.config_pin.when_held = self.to_config_state
-        self.config_pin.when_released = self.to_run_state
+        #self.config_pin.when_held = self.to_config_state
+        #self.config_pin.when_released = self.to_run_state
 
     def run(self):
-        if self.config_pin.is_held:
-            self.to_config_state()
-        else:
-            self.to_run_state()
-
-        pause()
+        while True:
+            if self.config_pin.value:
+                if self.fsm.state != 'config_state':
+                    self.to_config_state()
+            else:
+                if self.fsm.state != 'run_state':
+                    self.to_run_state()
+        
+            time.sleep(2)
 
     def to_run_state(self):
-        print('to run state')
         thread = Thread(target=self.fsm.to_run_state)
         thread.start()
         time.sleep(0.01) # thread requires some time to start
 
     def to_config_state(self):
-        print('to config state')
         thread = Thread(target=self.fsm.to_config_state)
         thread.start()
         time.sleep(0.01) # thread requires some time to start
