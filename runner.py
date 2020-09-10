@@ -30,6 +30,7 @@ class Runner():
 
     def loop(self, times_to_run=0):
         t = 0
+        self.quit = False
         while self.quit == False:
             t+= 1
             temps_list, over_limit_list = self._get_temps()

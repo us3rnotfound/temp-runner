@@ -47,5 +47,5 @@ class fsm():
 
     def on_exit_config_state(self):
         print ('quit config state')
-        self.config.stop_running()
+        #self.config.stop_running()
         

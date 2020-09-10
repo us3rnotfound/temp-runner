@@ -27,13 +27,17 @@ class Temp_runner():
             time.sleep(2)
 
     def to_run_state(self):
-        thread = Thread(target=self.fsm.to_run_state)
-        thread.start()
+        if 'self.config_thread' in locals():
+            if self.config_thread.isAlive():
+                self.config_thread._stop() 
+        self.run_thread = Thread(target=self.fsm.to_run_state)
+        self.run_thread.start()
         time.sleep(0.01) # thread requires some time to start
 
     def to_config_state(self):
-        thread = Thread(target=self.fsm.to_config_state)
-        thread.start()
+        self.config_thread = Thread(target=self.fsm.to_config_state)
+        self.config_thread.setDaemon(True)
+        self.config_thread.start()
         time.sleep(0.01) # thread requires some time to start
 
     '''

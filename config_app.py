@@ -3,8 +3,6 @@ import string
 import time
 import config_parser as config
 
-class InterruptExecution (Exception):
-    pass
 
 class Config():
     
@@ -98,13 +96,9 @@ class Config():
         return input_val 
 
     def run(self):
-        try:
-            curses.wrapper(self.main)
-        except InterruptExecution:
-            curses.endwin()
-
-    def stop_running(self):
-        raise (InterruptExecution('Stop Config'))
+        
+        curses.wrapper(self.main)
+        
 
 if __name__ == "__main__":
     c = Config()
