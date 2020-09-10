@@ -26,17 +26,17 @@ class Video_output():
         self.img_pil = Image.fromarray(self.background_img)
         self.draw = ImageDraw.Draw(self.img_pil)
 
-    def _write_temps(self, temps, over_limits):
+    def _write_temps(self, temps, over_limits, sensor_names):
         fill_rules = {True: RED, False: GREEN}
         n = 1
         print(temps, over_limits)
-        for temp, fill in zip(temps, over_limits):
-            self.draw.text((50, 80+(n*40)),  "Sensor " + str(n) +": {:0.2f}°F".format(temp), font = self.font, fill = fill_rules[fill])
+        for temp, fill, name in zip(temps, over_limits, sensor_names):
+            self.draw.text((50, 80+(n*40)),  name +": {:0.2f}°F".format(temp), font = self.font, fill = fill_rules[fill])
             n += 1
 
-    def update_temps(self, temps, over_limits):
+    def update_temps(self, temps, over_limits, sensor_names):
         self._clear_img()
-        self._write_temps(temps, over_limits)
+        self._write_temps(temps, over_limits, sensor_names)
 
         img_np = np.array(self.img_pil)
         #img_np_fullscreen = img_np.resize(1600,900)
@@ -47,5 +47,5 @@ class Video_output():
         cv2.waitKey(500)
 
     def destroy_video(self):
-        print('DESTROY VIDEO')
+        #print('DESTROY VIDEO')
         cv2.destroyAllWindows()

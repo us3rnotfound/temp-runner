@@ -3,7 +3,11 @@ import string
 import time
 import config_parser as config
 
+class InterruptExecution (Exception):
+    pass
+
 class Config():
+    
     def __init__(self):
         self.config_list = config.read_config()
     
@@ -27,14 +31,16 @@ class Config():
                                self.config_list['sensor_5_name']]))
 
             while True:
-                choice = self.curses_input(stdscr, 6,0,"Select Option 1 - 3 using a USB keyboard: ", True)
+                choice = self.curses_input(stdscr, 8,0,"Select Option 1 - 3 using a USB keyboard: ", True)
                 if choice == '1':
                     units = 'A'
                     while units.upper() != 'C' and units.upper() != 'F' and units.upper() != 'Q':
-                        units = self.curses_input(stdscr, 6,0,"For Fahrenheit type 'F', for Celsius type 'C', or to go back type 'Q': ", True)
+                        units = self.curses_input(stdscr, 8,0,"For Fahrenheit type 'F', for Celsius type 'C', or to go back type 'Q': ", True)
                     if units.upper() != self.config_list['units']:
                         
-                        if units.upper() != 'Q':
+                        if units.upper() == 'Q':
+                            break
+                        else:
                             self.config_list['units'] = units.upper()
                             old_max_limit = self.config_list['max_limit']
                             # 'F' to 'C'
@@ -44,15 +50,32 @@ class Config():
                             else:
                                 self.config_list['max_limit'] = round(9.0/5.0 * old_max_limit + 32, 1)
 
-                            config.write_config(self.config_list)
-                        
-                        curses.noecho()
-                        stdscr.addstr(8, 0, "SETTINGS SAVED. PULL CONFIG JUMPER TO GO BACK TO RUN MODE")
-                        stdscr.refresh()
-                        curses.napms(3000)
-                        break
+                            self.save_config(stdscr)
+                            break
 
-      
+                elif choice == '2':
+                    max_limit = 'bad' # not a number
+                    while max_limit.isdigit() == False and max_limit.upper() != b'Q':
+                        max_limit = self.curses_input(stdscr, 8,0,"Type the new max limit temperature in °"+self.config_list['units']+", or type 'Q' + Enter to go back: ")
+                        print (max_limit.upper())
+                    if max_limit.upper() == b'Q':
+                        break
+                    else:
+                        self.config_list['max_limit'] = float(max_limit)
+                        self.save_config(stdscr)
+                        break
+                
+                elif choice == '3':
+
+                    break
+
+    def save_config(self,stdscr):
+        config.write_config(self.config_list)  
+        curses.noecho()
+        stdscr.addstr(10, 0, "SETTINGS SAVED! PULL CONFIG JUMPER TO GO BACK TO RUN MODE")
+        stdscr.refresh()
+        curses.napms(3000)
+    
     def curses_input(self, stdscr, row, col, prompt_string, ascii_mode=False):
         """
         Get an input string with curses.
@@ -70,12 +93,18 @@ class Config():
                 input_val = chr(stdscr.getch())
                 break
             else:
-                input_val = stdscr.getstr(20)
+                input_val = stdscr.getstr(row, len(prompt_string)+1, 20)
 
         return input_val 
 
     def run(self):
-        curses.wrapper(self.main)
+        try:
+            curses.wrapper(self.main)
+        except InterruptExecution:
+            curses.endwin()
+
+    def stop_running(self):
+        raise (InterruptExecution('Stop Config'))
 
 if __name__ == "__main__":
     c = Config()

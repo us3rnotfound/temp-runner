@@ -5,10 +5,6 @@ from threading import Thread
 import time
 #import termios, sys , tty
 
-# UNITS:
-F = 0
-C = 1
-
 class Temp_runner():
     
     def __init__(self):
