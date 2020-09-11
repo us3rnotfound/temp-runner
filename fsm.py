@@ -1,7 +1,7 @@
 from transitions import Machine
 from runner import Runner
 from config_app import Config
-import config_parser
+import time
 
 class fsm():
 
@@ -20,8 +20,6 @@ class fsm():
              ]
 
     def __init__(self):
-        config_list = config_parser.read_config()
-
         self.name = 'temp_runner'
 
         # Initialize the state machine
@@ -30,22 +28,23 @@ class fsm():
                                transitions=fsm.transitions,
                                initial='idle')
 
-        self.runner = Runner(config_list)
+        self.runner = Runner()
         self.config = Config()
 
     def on_enter_run_state(self):
         print ('setup_run_state')
-        self.runner.loop(0)
+        self.runner.run(0)
 
     def on_exit_run_state(self):
         print ('quit_run_state')
-        self.runner.stop_running()
+        self.runner.stop()
 
     def on_enter_config_state(self):
         print ('setup config state')
+        time.sleep(5)
         self.config.run()
 
     def on_exit_config_state(self):
         print ('quit config state')
-        #self.config.stop_running()
+        self.config.stop()
         

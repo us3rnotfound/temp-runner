@@ -17,6 +17,15 @@ class Temp_runner():
 
     def run(self):
         while True:
+            self.to_run_state()
+
+            time.sleep(10)
+
+            self.to_config_state()
+
+            time.sleep(20)
+
+            '''
             if self.config_pin.value:
                 if self.fsm.state != 'config_state':
                     self.to_config_state()
@@ -25,11 +34,8 @@ class Temp_runner():
                     self.to_run_state()
         
             time.sleep(2)
-
+            '''
     def to_run_state(self):
-        if 'self.config_thread' in locals():
-            if self.config_thread.isAlive():
-                self.config_thread._stop() 
         self.run_thread = Thread(target=self.fsm.to_run_state)
         self.run_thread.start()
         time.sleep(0.01) # thread requires some time to start

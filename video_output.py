@@ -14,10 +14,10 @@ class Video_output():
         try:
             root = tkinter.Tk()
             w, h = root.winfo_screenwidth(), root.winfo_screenheight()
-            print('RESOLUTION: ' + str(w) + ' x ' + str(h))
+            #print('RESOLUTION: ' + str(w) + ' x ' + str(h))
             self.background_img = np.zeros((h,w,3), np.uint8)
         except:
-            print('RESOLUTION FAILED, 1024 x 768')
+            #print('RESOLUTION FAILED, 1024 x 768')
             self.background_img = np.zeros((1024,768,3), np.uint8)
 
     def _clear_img(self):
@@ -26,17 +26,17 @@ class Video_output():
         self.img_pil = Image.fromarray(self.background_img)
         self.draw = ImageDraw.Draw(self.img_pil)
 
-    def _write_temps(self, temps, over_limits, sensor_names):
+    def _write_temps(self, temps, over_limits, sensor_names, units):
         fill_rules = {True: RED, False: GREEN}
         n = 1
-        print(temps, over_limits)
+        #print(temps, over_limits)
         for temp, fill, name in zip(temps, over_limits, sensor_names):
-            self.draw.text((50, 80+(n*40)),  name +": {:0.2f}°F".format(temp), font = self.font, fill = fill_rules[fill])
+            self.draw.text((50, 80+(n*40)),  name +": {:0.2f}".format(temp)+"°"+units, font = self.font, fill = fill_rules[fill])
             n += 1
 
-    def update_temps(self, temps, over_limits, sensor_names):
+    def update_temps(self, temps, over_limits, sensor_names, units):
         self._clear_img()
-        self._write_temps(temps, over_limits, sensor_names)
+        self._write_temps(temps, over_limits, sensor_names, units)
 
         img_np = np.array(self.img_pil)
         #img_np_fullscreen = img_np.resize(1600,900)

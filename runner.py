@@ -1,17 +1,10 @@
 
 from video_output import Video_output
 from read_temps_class import Read_temps
+import config_parser
 
 class Runner():    
-    def __init__(self, config_list):
-        # Parameters
-        self.units = config_list['units']
-        self.max_limit = config_list['max_limit']
-        self.sensor_name_list = [config_list['sensor_1_name'],
-                                 config_list['sensor_2_name'],
-                                 config_list['sensor_3_name'],
-                                 config_list['sensor_4_name'],
-                                 config_list['sensor_5_name']]
+    def __init__(self):
         self.quit = False
 
         # Module inits
@@ -28,23 +21,35 @@ class Runner():
         else:
             return t_c_list, over_limit_list_c
 
-    def loop(self, times_to_run=0):
+    def update_config(self):
+        config_list = config_parser.read_config()
+        self.units = config_list['units']
+        self.max_limit = config_list['max_limit']
+        self.sensor_name_list = [config_list['sensor_1_name'],
+                                 config_list['sensor_2_name'],
+                                 config_list['sensor_3_name'],
+                                 config_list['sensor_4_name'],
+                                 config_list['sensor_5_name']]
+
+    def run(self, times_to_run=0):
+        self.update_config()
+
         t = 0
         self.quit = False
         while self.quit == False:
             t+= 1
             temps_list, over_limit_list = self._get_temps()
-            self.v.update_temps(temps_list, over_limit_list, self.sensor_name_list)
+            self.v.update_temps(temps_list, over_limit_list, self.sensor_name_list, self.units)
             if t == times_to_run:
                 break
         
         # Quit goes True or times to run exceeded:
         self.v.destroy_video()
 
-    def stop_running(self):
+    def stop(self):
         print ('trying to quit (runner)')
         self.quit = True
         
 if __name__ == "__main__":
-    r = Runner(units='F')
-    r.loop(5)
+    r = Runner()
+    r.run(5)

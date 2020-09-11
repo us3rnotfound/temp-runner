@@ -3,15 +3,16 @@ import string
 import time
 import config_parser as config
 
-
 class Config():
     
     def __init__(self):
         self.config_list = config.read_config()
+        self.quit = False
     
     def main(self, stdscr):
-        while True:
+        while self.quit == False:
             stdscr.clear()
+            stdscr.timeout(2000)
             stdscr.addstr(0, 0, "CONFIGURATION SETTINGS", curses.A_BOLD)
             stdscr.addstr(2, 0, "1. Units: ")
             if self.config_list['units'] == 'F':
@@ -28,11 +29,11 @@ class Config():
                                self.config_list['sensor_4_name'],
                                self.config_list['sensor_5_name']]))
 
-            while True:
+            while self.quit == False:
                 choice = self.curses_input(stdscr, 8,0,"Select Option 1 - 3 using a USB keyboard: ", True)
                 if choice == '1':
                     units = 'A'
-                    while units.upper() != 'C' and units.upper() != 'F' and units.upper() != 'Q':
+                    while self.quit == False and units.upper() != 'C' and units.upper() != 'F' and units.upper() != 'Q':
                         units = self.curses_input(stdscr, 8,0,"For Fahrenheit type 'F', for Celsius type 'C', or to go back type 'Q': ", True)
                     if units.upper() != self.config_list['units']:
                         
@@ -55,7 +56,7 @@ class Config():
                     max_limit = 'bad' # not a number
                     while max_limit.isdigit() == False and max_limit.upper() != b'Q':
                         max_limit = self.curses_input(stdscr, 8,0,"Type the new max limit temperature in °"+self.config_list['units']+", or type 'Q' + Enter to go back: ")
-                        print (max_limit.upper())
+                        #print (max_limit.upper())
                     if max_limit.upper() == b'Q':
                         break
                     else:
@@ -66,6 +67,7 @@ class Config():
                 elif choice == '3':
 
                     break
+        curses.endwin
 
     def save_config(self,stdscr):
         config.write_config(self.config_list)  
@@ -80,25 +82,44 @@ class Config():
 
         Row and col are the start position ot the prompt_string.
         """
-        curses.echo()
+        
         stdscr.addstr(row, col, str(prompt_string), curses.A_REVERSE)
-        stdscr.addstr(row + 1, col, " " * (curses.COLS - 1))
+        #stdscr.addstr(row + 1, col, " " * (curses.COLS - 1))
         stdscr.refresh()
         input_val = ""
 
-        while len(input_val) <= 0:
+        while self.quit == False:
             if ascii_mode:
-                input_val = chr(stdscr.getch())
-                break
+                curses.noecho()
+                input_val = stdscr.getch()
+                if input_val != -1:
+                    input_val = chr(input_val)
+                    break
             else:
-                input_val = stdscr.getstr(row, len(prompt_string)+1, 20)
-
+                curses.echo()
+                input_val = self.get_str(stdscr, 20)
+                break
+                
+    
         return input_val 
 
+    def get_str(self, stdscr, return_len):
+        word = ''
+        while self.quit == False and len(word) < return_len:
+            ch = stdscr.getch()
+            if ch != -1:
+                if ch == 10:
+                    break
+                else:
+                    word += chr(ch)
+        return word
+
     def run(self):
-        
+        self.quit = False
         curses.wrapper(self.main)
         
+    def stop(self):
+        self.quit = True
 
 if __name__ == "__main__":
     c = Config()

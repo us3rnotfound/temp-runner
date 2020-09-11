@@ -1,4 +1,4 @@
-max_limit: 31.7
+max_limit: 80.0
 sensor_1_name: Temperature Sensor 1
 sensor_2_name: Temperature Sensor 2
 sensor_3_name: Temperature Sensor 3
