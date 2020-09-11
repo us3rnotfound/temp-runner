@@ -17,6 +17,7 @@ class Temp_runner():
 
     def run(self):
         while True:
+            '''
             self.to_run_state()
 
             time.sleep(10)
@@ -24,8 +25,8 @@ class Temp_runner():
             self.to_config_state()
 
             time.sleep(20)
-
             '''
+            
             if self.config_pin.value:
                 if self.fsm.state != 'config_state':
                     self.to_config_state()
@@ -34,7 +35,7 @@ class Temp_runner():
                     self.to_run_state()
         
             time.sleep(2)
-            '''
+            
     def to_run_state(self):
         self.run_thread = Thread(target=self.fsm.to_run_state)
         self.run_thread.start()
@@ -46,31 +47,6 @@ class Temp_runner():
         self.config_thread.start()
         time.sleep(0.01) # thread requires some time to start
 
-    '''
-    def key_watch(self):
-        while True:
-            print ("Enter c or r: ")
-            key = self._getch()
-            if key=='c':
-                print (key)
-                self.fsm.trigger_configure()
-            elif key=='r':
-                print (key)
-                self.fsm.trigger_run()
-            else:
-                return
-                
-
-    def _getch(self):
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            tty.setraw(fd)
-            ch = sys.stdin.read(1)     #This number represents the length
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
-    '''
 
 t = Temp_runner()
 t.run()

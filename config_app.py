@@ -54,10 +54,12 @@ class Config():
 
                 elif choice == '2':
                     max_limit = 'bad' # not a number
-                    while max_limit.isdigit() == False and max_limit.upper() != b'Q':
+                    while max_limit.isdigit() == False and max_limit.upper() != 'Q':
+                        if max_limit.isdigit() == False:
+                            stdscr.clrtoeol()
                         max_limit = self.curses_input(stdscr, 8,0,"Type the new max limit temperature in °"+self.config_list['units']+", or type 'Q' + Enter to go back: ")
-                        #print (max_limit.upper())
-                    if max_limit.upper() == b'Q':
+                        
+                    if max_limit.upper() == 'Q':
                         break
                     else:
                         self.config_list['max_limit'] = float(max_limit)
@@ -65,16 +67,32 @@ class Config():
                         break
                 
                 elif choice == '3':
-
+                    names = ['','','','','']
+                    for n in range(1,6):
+                        stdscr.clrtoeol()
+                        name = self.config_list['sensor_'+str(n)+'_name']
+                        name = self.curses_input(stdscr, 8,0,"Type in new name to replace \"" + name + "\", or type 'Q' + Enter to go back: ")
+                        if name.upper() == 'Q' or self.quit:
+                            break
+                        names[n-1] = name
+                    
+                    if self.quit == False and name.upper() != 'Q':
+                        for n in range(1,6):
+                            self.config_list['sensor_'+str(n)+'_name'] = names[n-1]
+                        self.save_config(stdscr)
                     break
         curses.endwin
 
     def save_config(self,stdscr):
         config.write_config(self.config_list)  
         curses.noecho()
-        stdscr.addstr(10, 0, "SETTINGS SAVED! PULL CONFIG JUMPER TO GO BACK TO RUN MODE")
+        stdscr.erase()
+        try:
+            stdscr.addstr(1, 0, "SETTINGS SAVED! PULL CONFIG JUMPER TO GO BACK TO RUN MODE")
+        except:
+            pass
         stdscr.refresh()
-        curses.napms(3000)
+        curses.napms(5000)
     
     def curses_input(self, stdscr, row, col, prompt_string, ascii_mode=False):
         """
@@ -105,7 +123,7 @@ class Config():
 
     def get_str(self, stdscr, return_len):
         word = ''
-        while self.quit == False and len(word) < return_len:
+        while self.quit == False and len(word) <= return_len:
             ch = stdscr.getch()
             if ch != -1:
                 if ch == 10:
