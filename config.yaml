@@ -1,7 +1,7 @@
-max_limit: 177.8
-sensor_1_name: ''
-sensor_2_name: test
-sensor_3_name: test
-sensor_4_name: test
-sensor_5_name: test
+max_limit: 1.0
+sensor_1_name: this
+sensor_2_name: program
+sensor_3_name: sucks hard
+sensor_4_name: ok?
+sensor_5_name: alright.
 units: F

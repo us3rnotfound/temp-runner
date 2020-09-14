@@ -30,11 +30,11 @@ class Config():
                                self.config_list['sensor_5_name']]))
 
             while self.quit == False:
-                choice = self.curses_input(stdscr, 8,0,"Select Option 1 - 3 using a USB keyboard: ", True)
+                choice = self.curses_input(stdscr, 8,0,"Select Option 1 - 3 using a USB keyboard:", True)
                 if choice == '1':
                     units = 'A'
                     while self.quit == False and units.upper() != 'C' and units.upper() != 'F' and units.upper() != 'Q':
-                        units = self.curses_input(stdscr, 8,0,"For Fahrenheit type 'F', for Celsius type 'C', or to go back type 'Q': ", True)
+                        units = self.curses_input(stdscr, 8,0,"For Fahrenheit type 'F', for Celsius type 'C', or to go back type 'Q':", True)
                     if units.upper() != self.config_list['units']:
                         
                         if units.upper() == 'Q':
@@ -57,7 +57,7 @@ class Config():
                     while max_limit.isdigit() == False and max_limit.upper() != 'Q':
                         if max_limit.isdigit() == False:
                             stdscr.clrtoeol()
-                        max_limit = self.curses_input(stdscr, 8,0,"Type the new max limit temperature in °"+self.config_list['units']+", or type 'Q' + Enter to go back: ")
+                        max_limit = self.curses_input(stdscr, 8,0,"Type the new max limit temperature in °"+self.config_list['units']+", or type 'Q' + Enter to go back:")
                         
                     if max_limit.upper() == 'Q':
                         break
@@ -71,7 +71,7 @@ class Config():
                     for n in range(1,6):
                         stdscr.clrtoeol()
                         name = self.config_list['sensor_'+str(n)+'_name']
-                        name = self.curses_input(stdscr, 8,0,"Type in new name to replace \"" + name + "\", or type 'Q' + Enter to go back: ")
+                        name = self.curses_input(stdscr, 8,0,"Type in new name to replace \"" + name + "\", or type 'Q' + Enter to go back:")
                         if name.upper() == 'Q' or self.quit:
                             break
                         names[n-1] = name
@@ -102,6 +102,7 @@ class Config():
         """
         
         stdscr.addstr(row, col, str(prompt_string), curses.A_REVERSE)
+        stdscr.addstr(" ")
         #stdscr.addstr(row + 1, col, " " * (curses.COLS - 1))
         stdscr.refresh()
         input_val = ""
@@ -114,8 +115,13 @@ class Config():
                     input_val = chr(input_val)
                     break
             else:
-                curses.echo()
+                #curses.cbreak()
+                curses.noecho()
+                #stdscr.keypad(1)
                 input_val = self.get_str(stdscr, 20)
+                #curses.nocbreak()
+                #stdscr.keypad(1)
+                #curses.endwin()
                 break
                 
     
@@ -126,9 +132,21 @@ class Config():
         while self.quit == False and len(word) <= return_len:
             ch = stdscr.getch()
             if ch != -1:
-                if ch == 10:
+                if ch == 8 or ch == 127 or ch == curses.KEY_BACKSPACE:
+                    if len(word) > 0: 
+                        word = word[:-1]
+                        stdscr.addstr("\b \b")
+                elif ch >= 258 and ch <= 261 or ch == 330:
+                    pass
+                elif ch == 10:
+                    y,_ = stdscr.getyx()
+                    stdscr.move(y, 0)
+                    stdscr.clrtoeol()
+                    stdscr.refresh()
                     break
                 else:
+                    ##print(ch)
+                    stdscr.addch(ch)
                     word += chr(ch)
         return word
 

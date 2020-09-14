@@ -1,0 +1,11 @@
+[Unit]
+Description=Start the LIAR Control Program
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+WorkingDirectory=/home/pi/temp_readout
+ExecStart=/usr/bin/screen -h 500 -DmS liar sh -c '/usr/bin/python3 /home/pi/temp_readout/main_app.py; exec bash'
+
+[Install]
+WantedBy=multi-user.target

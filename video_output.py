@@ -35,7 +35,11 @@ class Video_output():
             n += 1
 
     def update_temps(self, temps, over_limits, sensor_names, units):
-        self._clear_img()
+        self._clear_img(
+            temps_list, over_limit_list = self._get_temps()
+            self.v.update_temps(temps_list, over_limit_list, self.sensor_name_list, self.units)
+            if t == times_to_run:
+                break)
         self._write_temps(temps, over_limits, sensor_names, units)
 
         img_np = np.array(self.img_pil)
