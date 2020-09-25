@@ -30,6 +30,7 @@ class Runner():
                                  config_list['sensor_3_name'],
                                  config_list['sensor_4_name'],
                                  config_list['sensor_5_name']]
+        print (config_list)
 
     def run(self, times_to_run=0):
         self.update_config()
@@ -51,5 +52,7 @@ class Runner():
         self.quit = True
         
 if __name__ == "__main__":
+    import time
+
     r = Runner()
     r.run(5)

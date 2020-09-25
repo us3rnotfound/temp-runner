@@ -1,11 +1,9 @@
 [Unit]
-Description=Start the LIAR Control Program
-Wants=network-online.target
-After=network-online.target
-
+Description=Temp-runner
 [Service]
+Type=simple
 WorkingDirectory=/home/pi/temp_readout
-ExecStart=/usr/bin/screen -h 500 -DmS liar sh -c '/usr/bin/python3 /home/pi/temp_readout/main_app.py; exec bash'
-
+TimeoutStartSec=0
+ExecStart=/usr/bin/python3 /home/pi/temp_readout/main_app.py
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
